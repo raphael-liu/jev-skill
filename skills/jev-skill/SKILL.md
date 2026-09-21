@@ -4,7 +4,7 @@ description: Use Jev (TypeSafe) for bounded structured decisions, classification
 license: MIT
 metadata:
   compatibility: Claude Code or Codex; Python 3.10+, network access and TYPESAFE_API_KEY for live calls.
-  documentation_verified: "2026-09-21"
+  documentation_verified: "2026-09"
 ---
 
 # Jev Structured Decision Skill
@@ -21,7 +21,7 @@ This skill is an independent community implementation, not an official TypeSafe 
 - **Operating rules:** acceptance, verification, and fallback requirements defined by this skill.
 - **Experimental evidence:** observations from the repository's limited tests, not vendor guarantees or general performance rankings.
 
-The source list at the end supports these distinctions. Documentation was checked on 2026-09-21. Recheck official sources when changing model versions or protocol behavior. Do not replace verified facts with remembered SDK signatures or assume that aliases, service limits, or prices remain unchanged.
+The source list at the end supports these distinctions. Documentation was checked on 2026-09. Recheck official sources when changing model versions or protocol behavior. Do not replace verified facts with remembered SDK signatures or assume that aliases, service limits, or prices remain unchanged.
 
 Installation does not replace the host model, install model weights, or configure a global router. Follow the user's language when responding, including Chinese or English; preserve API identifiers. This English specification supports both languages without requiring bilingual replies.
 
@@ -285,7 +285,7 @@ The current client makes one attempt. A production integration may define bounde
 
 ### Controlled decision benchmark
 
-On 2026-09-21, the repository evaluated 80 held-out questions after 40 development questions. All arms received fixed evidence and selected `decision` and `evidence` from predefined choices. Codex used CLI `0.145.0`, model `gpt-5.6-sol`, and `medium` reasoning; Jev used `jev-1.13.0`. Claude Code was not benchmarked.
+On 2026-09, the repository evaluated 80 held-out questions after 40 development questions. All arms received fixed evidence and selected `decision` and `evidence` from predefined choices. Codex used CLI `0.145.0`, model `gpt-5.6-sol`, and `medium` reasoning; Jev used `jev-1.13.0`. Claude Code was not benchmarked.
 
 | Metric | Codex alone | Jev alone | Jev-to-Codex cascade |
 |---|---:|---:|---:|
