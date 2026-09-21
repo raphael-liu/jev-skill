@@ -67,14 +67,6 @@ The development procedure selected `min(decision confidence, evidence confidence
 
 ## Provider-reported token usage
 
-### What differs between B / Jev and C / Jev?
-
-- **B / Jev (standalone):** Jev is called for all 80 questions and its output is B's final answer, without Codex fallback.
-- **C / Jev (cascade first stage):** fresh Jev calls cover all 80 questions; 63 return directly and 17 continue to Codex. This measures the first stage of C, not the whole arm or only the 17 escalations.
-- **C / Codex (escalation):** only those 17 Codex calls. Complete C usage adds C / Jev and C / Codex; it does not also add the independent B control arm.
-
-Both Jev components use the same version and question payloads, giving 62,838 input tokens each in this run. Their requests are independent and responses are not reused; recorded output totals are 9,699 and 9,687. Responses, timing, and output counters need not match. Analyze corrections against C's own first-stage answer, never B's separate answer. For example, crash C made no escalations yet averaged 0.93 seconds versus B's 1.15 seconds: independent-call variation does not prove that adding cascade logic speeds up Jev.
-
 Formal 80-question test only; cached input is already part of input. Jev did not report a separate cached-input counter. “Total” is input + output, never input + cached + output.
 
 | Arm / provider | Input | Cached input (subset) | Output | Input + output |
