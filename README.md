@@ -8,12 +8,12 @@ Jev is TypeSafe's fast structured decision model. It returns a choice, score, or
 
 ## Install
 
-The repository is initialized locally. A GitHub remote will be supplied later. **Replace `<owner/repo>` with the published repository**; it is not an existing installation target yet.
+Repository: [raphael-liu/jev-skill](https://github.com/raphael-liu/jev-skill). Install from GitHub after the repository contents have been pushed:
 
 ```bash
-npx skills add <owner/repo>
+npx skills add raphael-liu/jev-skill
 # Explicit selection for both supported coding agents:
-npx skills add <owner/repo> --skill jev-skill --agent claude-code codex
+npx skills add raphael-liu/jev-skill --skill jev-skill --agent claude-code codex
 ```
 
 For a local checkout, run from the project where you want the skill installed:
@@ -70,12 +70,5 @@ DISABLE_TELEMETRY=1 npx skills add . --list
 ```
 
 Tests mock the API and require no secret or paid requests. CI runs tests and both example dry-runs. Changes should preserve English/Chinese parity, self-contained installation, explicit unknown/fallback handling and accurate measurement boundaries. Include tests for client behavior changes; do not submit credentials, internal source material or raw private model responses.
-
-To publish later, replace `<owner/repo>` in both READMEs with the actual name, create an empty public repository, then set its remote and push `main`:
-
-```bash
-git remote add origin https://github.com/<owner/repo>.git
-git push -u origin main
-```
 
 License: [MIT](LICENSE), including the packaged skill. Jev access is provided separately by TypeSafe under its own terms. Official references: [API](https://docs.typesafe.ai/api), [confidence](https://docs.typesafe.ai/confidence), [models](https://docs.typesafe.ai/models).

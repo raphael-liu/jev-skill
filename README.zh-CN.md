@@ -8,12 +8,12 @@ Jev 是 TypeSafe 的快速结构化决策模型，根据给定文本返回选项
 
 ## 安装
 
-仓库已在本地初始化，GitHub 远端后续补充。**请将 `<owner/repo>` 替换为实际发布仓库**；目前它不是可用安装目标。
+GitHub 仓库：[raphael-liu/jev-skill](https://github.com/raphael-liu/jev-skill)。仓库内容推送后，可使用以下命令安装：
 
 ```bash
-npx skills add <owner/repo>
+npx skills add raphael-liu/jev-skill
 # 明确安装到两个编码 Agent：
-npx skills add <owner/repo> --skill jev-skill --agent claude-code codex
+npx skills add raphael-liu/jev-skill --skill jev-skill --agent claude-code codex
 ```
 
 本地使用时，在需要安装技能的目标项目目录执行：
@@ -70,12 +70,5 @@ DISABLE_TELEMETRY=1 npx skills add . --list
 ```
 
 测试模拟 API，无需密钥或付费调用。CI 执行测试和两个示例的 dry-run。修改时保持中英文一致、安装包自包含、未知与回退明确、测量口径准确。客户端行为变更应附相关测试；不要提交凭据、内部源码或私密原始模型响应。
-
-后续发布时，将两个 README 中的 `<owner/repo>` 替换为实际名称，创建空的公开仓库，再设置远端并推送 `main`：
-
-```bash
-git remote add origin https://github.com/<owner/repo>.git
-git push -u origin main
-```
 
 许可证：[MIT](LICENSE)，技能安装包内也包含许可证。Jev 服务由 TypeSafe 独立提供，适用其自身条款。一手资料：[API](https://docs.typesafe.ai/api)、[confidence](https://docs.typesafe.ai/confidence)、[models](https://docs.typesafe.ai/models)。
