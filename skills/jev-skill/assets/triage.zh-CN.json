@@ -1,0 +1,33 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "case_id": "synthetic-001",
+    "report": "应用启动时偶发崩溃。只有用户描述，缺少日志和匹配的符号产物。",
+    "protocol": "没有原始崩溃日志时先收集日志；有日志但无匹配符号时收集符号；二者齐全才能开始诊断。"
+  },
+  "questions": {
+    "decision": {
+      "type": "choice",
+      "instructions": "根据给定协议选择下一步。",
+      "criteria": {
+        "collect_logs": "缺少原始崩溃日志",
+        "collect_symbols": "已有日志但缺少匹配符号",
+        "diagnose": "日志和匹配符号都存在",
+        "unknown": "材料不足以应用协议"
+      }
+    },
+    "has_required_evidence": {
+      "type": "noul",
+      "instructions": "是否同时具备原始崩溃日志和匹配的符号产物？"
+    },
+    "readiness": {
+      "type": "score",
+      "instructions": "按现有证据评价诊断准备程度。",
+      "criteria": [
+        "只有描述，缺少日志",
+        "有日志，无匹配符号",
+        "日志与匹配符号齐全"
+      ]
+    }
+  }
+}

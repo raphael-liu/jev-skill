@@ -1,0 +1,33 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "case_id": "synthetic-001",
+    "report": "Intermittent startup crash. Only a user report is available; logs and matching symbols are missing.",
+    "protocol": "Collect logs when the raw crash report is missing. Collect matching symbols when only logs are available. Start diagnosis only when both are present."
+  },
+  "questions": {
+    "decision": {
+      "type": "choice",
+      "instructions": "Choose the next step under the supplied protocol.",
+      "criteria": {
+        "collect_logs": "Raw crash report is absent",
+        "collect_symbols": "Logs present but matching symbols absent",
+        "diagnose": "Both logs and matching symbols available",
+        "unknown": "Insufficient information to apply the protocol"
+      }
+    },
+    "has_required_evidence": {
+      "type": "noul",
+      "instructions": "Are both the raw crash report and matching symbol artifacts available?"
+    },
+    "readiness": {
+      "type": "score",
+      "instructions": "Rate diagnostic readiness from the supplied evidence.",
+      "criteria": [
+        "Description only, no logs",
+        "Logs without matching symbols",
+        "Logs and matching symbols available"
+      ]
+    }
+  }
+}

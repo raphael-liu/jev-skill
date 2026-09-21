@@ -1,0 +1,80 @@
+# Measurements and limits
+
+[中文](benchmarks.zh-CN.md)
+
+**Jev was fast on bounded structured decisions; these experiments do not establish a general improvement in complete development tasks.** Measurements were taken on 2026-09-21 with Codex CLI `0.145.0`, `gpt-5.6-sol` / `medium`, and Jev `jev-1.13.0`. Claude Code was not measured. Compatibility of this skill with an agent is not evidence of performance with that agent.
+
+## Complete-task pilot
+
+A = Codex alone; C = Jev suggestions followed by Codex. Each row is one pair, not a distribution. Timing runs from script submission to final CLI response, including retrieval, model calls, tools and in-task checks; shared preparation and independent acceptance checks are excluded. This is not desktop click-to-render time.
+
+| Scenario | A seconds | C seconds | C vs A | Interpretation |
+|---|---:|---:|---:|---|
+| Snake application | 163.72 | 177.66 | +8.5% | Both passed 14 engine checks, type checking and two-platform bundle export; native interaction was not tested. |
+| Real code review | 417.53 | 289.96 | −30.6% | C had weaker supported coverage; this is not equal-quality acceleration. |
+| Crash, fixed source snapshot | 175.52 | 188.87 | +7.6% | No verified root-cause truth or reproduction. |
+| Knowledge answer, live retrieval | 63.85 | 53.26 | −16.6% | Retrieved materials differed, confounding comparison. |
+| Knowledge answer, identical material | 35.83 | 34.02 | −5.0% | One pair; different cache use/output lengths prevent a stable-speed claim. |
+
+The original `crash` exploratory pair (212.73 / 252.18 seconds) is retained in the CSV but excluded from the fair comparison: historical fixes were accessible. `crash_fixed` is the replacement comparison. `drn_fixed` isolates answer generation and excludes live retrieval. Do not sum these alternatives as independent comparable tasks.
+
+In the real review, Jev ranked 350 diff chunks using 43 requests (47.73 seconds; 428,007 Jev input tokens). A sensitive-file issue ranked 43rd and was absent from the combined review. Low priority must not remove files from review or replace deterministic secret checks. The pilot contains no proof of a general end-to-end or total-cost benefit.
+
+## Bounded decisions: 80 held-out questions
+
+A = Codex; B = Jev; C = a fresh Jev call, then Codex when routing requires it. B and C do not share Jev responses. Each answer selects `decision` and `evidence` from fixed choices; “exact” means both match. Tools and retrieval are disallowed. This is different from writing an application, discovering all review defects or diagnosing a real incident.
+
+There are 40 development questions (10/scenario), followed by 80 test questions (20/scenario). Coding and review questions are synthetic executable microcases; crash questions apply explicit rules to synthetic evidence. Knowledge development material is synthetic and its test cases derive from one verified document. Test source-group counts are 4 / 10 / 10 / 1 respectively, so 80 questions are not 80 independent real-world sources. Review choices supply a counterexample to verify; coding evidence labels express consistency rather than independent localization.
+
+| Scenario | A exact; mean seconds | B exact; mean seconds | C exact; mean seconds | C direct / wrong direct |
+|---|---|---|---|---|
+| Coding rules | 20/20; 9.90 | 14/20; 0.94 | 19/20; 5.44 | 12 / 1 |
+| Controlled review | 20/20; 10.52 | 18/20; 0.94 | 20/20; 2.64 | 17 / 0 |
+| Crash evidence decisions | 20/20; 9.43 | 20/20; 1.15 | 20/20; 0.93 | 20 / 0 |
+| Knowledge evidence selection | 18/20; 9.60 | 14/20; 0.92 | 17/20; 4.07 | 14 / 1 |
+| Arithmetic aggregate | 78/80 (97.5%); 9.86 | 66/80 (82.5%); 0.99 | 76/80 (95.0%); 3.27 | 63 / 2 |
+
+C escalated 17 questions. Against C's own initial Jev answer, 9 wrong answers became correct, 6 correct answers stayed correct, and 2 wrong answers stayed wrong. The 63 direct answers included 2 errors. Coding and knowledge cases traded accuracy for latency. Crash C used Jev exclusively, so it shows rule execution, not a benefit from Codex collaboration. Controlled review performance cannot be generalized to full real reviews.
+
+The development procedure selected `min(decision confidence, evidence confidence) >= 0.5` from five candidate thresholds, requiring at least five direct answers and zero development direct errors (34 direct answers qualified). **0.5 is an experimental artifact, not a production default or calibrated correctness probability.** Two test errors passed at confidence 0.79 and 0.60. Production routing needs its own held-out validation and explicit error budget; confidence alone is insufficient.
+
+## Provider-reported token usage
+
+Formal 80-question test only; cached input is already part of input. Jev did not report a separate cached-input counter. “Total” is input + output, never input + cached + output.
+
+| Arm / provider | Input | Cached input (subset) | Output | Input + output |
+|---|---:|---:|---:|---:|
+| A / Codex | 2,024,876 | 824,192 | 2,407 | 2,027,283 |
+| B / Jev | 62,838 | not reported | 9,699 | 72,537 |
+| C / Codex | 430,184 | 193,152 | 1,073 | 431,257 |
+| C / Jev | 62,838 | not reported | 9,687 | 72,525 |
+| C / arithmetic provider sum | 493,022 | 193,152 Codex only | 10,760 | 503,782 |
+
+C reduced Codex calls from 80 to 17 (78.75%). The arithmetic total decreased about 75.15%, **not 78.75%**: C also calls Jev, call sizes vary, and output varies. Different provider tokenizers make the sum a bookkeeping quantity, not an equal unit of work. CLI fixed context, caching and API/CLI protocol differences further prevent interpreting these counts as intrinsic model efficiency. No actual bills are available, so neither monetary savings nor a Claude comparison is claimed.
+
+Across all phases, A has 152 rows, B 152, and C 112 (C was not run on development). Reported sums below are not complete consumption totals or a fair cross-arm comparison:
+
+| Arm / provider | Reported input | Reported cache | Reported output | Missing usage rows |
+|---|---:|---:|---:|---:|
+| A / Codex | 3,820,935 | 1,490,944 | 4,149 | 1 |
+| B / Jev | 111,150 | not reported | 17,215 | 10 |
+| C / Codex | 834,612 | 497,792 | 1,558 | 0 |
+| C / Jev | 76,930 | not reported | 11,866 | 14 |
+
+Missing usage on failed calls is **unknown, not zero**. The sanitized CSV uses empty cells for it; zero denotes no call to that provider. Pilot Jev output/cache usage was not recorded and cannot be reconstructed.
+
+## Reliability and validity limits
+
+The formal 240 responses had no service/protocol failures. Development A had one capacity failure, retained as incorrect. A preselected 16-case subset was repeated twice (32 additional calls per arm): B had 10 HTTP 503 failures, and C's Jev stage had 14; C fell back and returned valid final responses. Repeats are not extra independent test questions. No semantic answer changes were observed among successful replies in the repeated subset, which does not establish stability. Service failure is distinct from semantic error, and this short window does not estimate long-term availability.
+
+Four concurrent cases shared a machine; within each case arm order alternated. Timing includes CLI startup, routing, validation and failed responses, but excludes shared preparation and independent scoring. These are system-integration latencies, not isolated inference speeds. Agent-generated questions were reviewed by another agent, not blindly labeled by human experts. Runtime directories exposed case/phase names; event auditing found no tool reads of labels, but was not an OS-level access audit. There is no statistical significance, stable p95, calibrated reliability or general-product-ranking claim.
+
+## Public data and recomputation
+
+- [data/pilot.csv](data/pilot.csv): allowlisted measurements from the logical source `jev-codex-eval/measurements.csv`, cross-checked with `measurements.json`; interpretation follows its `report.md`.
+- [data/structured.csv](data/structured.csv): 416 measurement rows from `jev-codex-eval-v2/results.csv`, with opaque numeric case/source-group identifiers. Text answers, labels, input hashes, original IDs, error bodies, source contents and internal links are excluded. Missing failed-call usage is normalized to empty cells rather than the source's placeholder zeros.
+- Method and aggregate cross-checks use logical sources `jev-codex-eval-v2/{protocol.md,report.md,summary.json,cascade-analysis.json,repeat-stability.json}`. These names identify the local experiment artifacts, not downloadable public files.
+
+Run `python3 docs/recompute.py` from the repository root. It uses only the standard library and makes no API calls. It selects `phase == "test"`, groups by arm/scenario, sums exact matches, averages `e2e_s`, counts direct errors, and sums nonempty provider counters while reporting missing counts. Pilot change is `(C / A - 1) * 100`. CSV preserves precision; tables round for display.
+
+This release supports **aggregate arithmetic verification**, not full experimental reproduction: private source materials, prompts, raw responses, oracles and the original evaluator are not published. The pilot's qualitative acceptance findings and HTTP failure classifications come from the source reports and cannot be independently recreated from the sanitized measurements alone.
