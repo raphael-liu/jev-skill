@@ -36,7 +36,7 @@ def main():
             'scenarios': {},
             'usage': {key: usage(group, key) for key in group[0] if key.endswith('_tokens')},
         }
-        for scenario in ('snake', 'mr', 'crash', 'drn'):
+        for scenario in ('snake', 'mr', 'crash', 'rn'):
             subset = [r for r in group if r['scenario'] == scenario]
             assert len(subset) == 20
             result[arm]['scenarios'][scenario] = {

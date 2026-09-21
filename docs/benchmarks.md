@@ -2,7 +2,7 @@
 
 [中文](benchmarks.zh-CN.md)
 
-**Jev was fast on bounded structured decisions; these experiments do not establish a general improvement in complete development tasks.** Measurements were taken on 2026-09-21 with Codex CLI `0.145.0`, `gpt-5.6-sol` / `medium`, and Jev `jev-1.13.0`. Claude Code was not measured. Compatibility of this skill with an agent is not evidence of performance with that agent.
+**Jev was fast on bounded structured decisions; these experiments do not establish a general improvement in complete development tasks.** Measurements were taken on 2026-09 with Codex CLI `0.145.0`, `gpt-5.6-sol` / `medium`, and Jev `jev-1.13.0`. Claude Code was not measured. Compatibility of this skill with an agent is not evidence of performance with that agent.
 
 ## Complete-task pilot
 
@@ -16,7 +16,7 @@ A = Codex alone; C = Jev suggestions followed by Codex. Each row is one pair, no
 | Knowledge answer, live retrieval | 63.85 | 53.26 | −16.6% | Retrieved materials differed, confounding comparison. |
 | Knowledge answer, identical material | 35.83 | 34.02 | −5.0% | One pair; different cache use/output lengths prevent a stable-speed claim. |
 
-The original `crash` exploratory pair (212.73 / 252.18 seconds) is retained in the CSV but excluded from the fair comparison: historical fixes were accessible. `crash_fixed` is the replacement comparison. `drn_fixed` isolates answer generation and excludes live retrieval. Do not sum these alternatives as independent comparable tasks.
+The original `crash` exploratory pair (212.73 / 252.18 seconds) is retained in the CSV but excluded from the fair comparison: historical fixes were accessible. `crash_fixed` is the replacement comparison. `rn_fixed` isolates answer generation and excludes live retrieval. Do not sum these alternatives as independent comparable tasks.
 
 In the real review, Jev ranked 350 diff chunks using 43 requests (47.73 seconds; 428,007 Jev input tokens). A sensitive-file issue ranked 43rd and was absent from the combined review. Low priority must not remove files from review or replace deterministic secret checks. The pilot contains no proof of a general end-to-end or total-cost benefit.
 
